@@ -1,0 +1,7 @@
+*.csv
+.ipynb_checkpoints/
+__pycache__/
+*.pyc
+artifacts/
+mlruns/
+*.db

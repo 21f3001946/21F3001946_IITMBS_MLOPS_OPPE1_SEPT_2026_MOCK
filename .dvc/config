@@ -1,0 +1,4 @@
+[core]
+    remote = mockstorage
+['remote "mockstorage"']
+    url = gs://mlops-oppe1-mock-2026-592573007709
