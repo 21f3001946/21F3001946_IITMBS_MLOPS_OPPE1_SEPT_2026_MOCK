@@ -4,6 +4,7 @@ import mlflow
 import mlflow.sklearn
 import json
 from pathlib import Path
+from sklearn.metrics import confusion_matrix
 
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -170,12 +171,46 @@ def tune_hyperparameters(data):
             predictions = model.predict(val_df[FEATURES])
 
             accuracy = accuracy_score(y_val, predictions)
+            precision = precision_score(
+                y_val, predictions, average="macro", zero_division=0
+            )
+            recall = recall_score(
+                y_val, predictions, average="macro", zero_division=0
+            )
             f1 = f1_score(y_val, predictions, average="macro")
-
+            
+            # Generate classification report
+            report = classification_report(
+                y_val,
+                predictions,
+                target_names=["setosa", "versicolor", "virginica"],
+                zero_division=0
+            )
+            
+            # Generate confusion matrix
+            cm = confusion_matrix(y_val, predictions)
+            
+            # Log parameters
             mlflow.log_param("max_depth", depth)
             mlflow.log_param("random_state", 42)
+            
+            # Log metrics
             mlflow.log_metric("accuracy", accuracy)
+            mlflow.log_metric("precision_macro", precision)
+            mlflow.log_metric("recall_macro", recall)
             mlflow.log_metric("f1_macro", f1)
+            
+            # Log classification report
+            mlflow.log_text(
+                report,
+                "classification_report.txt"
+            )
+            
+            # Log confusion matrix
+            mlflow.log_dict(
+                {"confusion_matrix": cm.tolist()},
+                "confusion_matrix.json"
+            )
 
             mlflow.sklearn.log_model(
                 model,

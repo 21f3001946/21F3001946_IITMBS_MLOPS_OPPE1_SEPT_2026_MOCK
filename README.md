@@ -76,6 +76,11 @@ The pipeline logs parameters, metrics, classification reports and model artifact
 
 Hyperparameter tuning evaluates maximum tree depths of 2, 3, 4 and 5. Each trial is recorded as a separate MLflow run.
 
+The pipeline logs the following artifacts for each hyperparameter tuning run:
+- Classification report (`classification_report.txt`)
+- Confusion matrix (`confusion_matrix.json`)
+- Trained model (`model/`)
+
 ## Model Inference
 
 Run:
